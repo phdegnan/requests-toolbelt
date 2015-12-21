@@ -11,13 +11,23 @@ urllib3 without providing a shim.
 from collections import Mapping, MutableMapping
 import sys
 
+import requests
+
+if requests.__build__ >= 0x020400:
+    try:
+        from requests.packages.urllib3 import connection
+    except ImportError:
+        from urllib3 import connection
+else:
+    connection = None
+
 try:
-    from requests.packages.urllib3 import connection
+    #from requests.packages.urllib3 import connection
     from requests.packages.urllib3 import fields
     from requests.packages.urllib3 import filepost
     from requests.packages.urllib3 import poolmanager
 except ImportError:
-    from urllib3 import connection
+    #from urllib3 import connection
     from urllib3 import fields
     from urllib3 import filepost
     from urllib3 import poolmanager
