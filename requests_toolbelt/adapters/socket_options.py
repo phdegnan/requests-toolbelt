@@ -32,13 +32,15 @@ class SocketOptionsAdapter(adapters.HTTPAdapter):
         >>> opts = socket_options.SocketOptionsAdapter.default_options + opts
 
     """
-
-    default_options = getattr(
-        connection.HTTPConnection,
-        'default_socket_options',
-        [(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)]
-    )
-
+     if connection is not None:
+        default_options = getattr(
+            connection.HTTPConnection,
+            'default_socket_options',
+            [(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)]
+        )
+    else:
+        default_socket_options = [(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)]
+    
     def __init__(self, **kwargs):
         self.socket_options = kwargs.pop('socket_options',
                                          self.default_options)
